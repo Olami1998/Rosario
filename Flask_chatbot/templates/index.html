@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Flask Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="chat-container">
+        <div id="chatbox">
+            <div class="bot-message">Bot: Hello! How can I help you?</div>
+        </div>
+        
+        <div class="input-container">
+            <input type="text" id="user_input" placeholder="Type your message...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function appendMessage(sender, message) {
+            const chatbox = document.getElementById("chatbox");
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `${sender}-message`;
+            messageDiv.textContent = `${sender.charAt(0).toUpperCase() + sender.slice(1)}: ${message}`;
+            chatbox.appendChild(messageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        function sendMessage() {
+            const userInput = document.getElementById("user_input");
+            const message = userInput.value.trim();
+            
+            if (message) {
+                appendMessage("user", message);
+                userInput.value = "";
+                
+                // Send to backend
+                fetch('/get', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `msg=${encodeURIComponent(message)}`
+                })
+                .then(response => response.json())
+                .then(data => appendMessage("bot", data.response));
+            }
+        }
+
+        // Allow Enter key to send message
+        document.getElementById("user_input").addEventListener("keypress", function(e) {
+            if (e.key === "Enter") {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
