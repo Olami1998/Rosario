@@ -1,0 +1,13 @@
+1. Clone/Copy all files into the folder
+
+2. Open terminal in project folder
+
+3. Run these commands:
+	pip install -r requirements.txt
+	python app.py
+
+4. Visit http://localhost:5000 in their browser
+
+5. Type messages like "hello", "help", or "bye"
+
+6. See immediate responses from the bot
